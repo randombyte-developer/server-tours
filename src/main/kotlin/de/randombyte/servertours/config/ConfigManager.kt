@@ -1,6 +1,5 @@
 package de.randombyte.servertours.config
 
-import com.flowpowered.math.vector.Vector3d
 import com.flowpowered.math.vector.Vector3i
 import com.google.common.reflect.TypeToken
 import de.randombyte.servertours.Tour
@@ -29,28 +28,32 @@ object ConfigManager {
     //Initialized in init phase of plugin
     lateinit var configLoader: ConfigurationLoader<out ConfigurationNode>
 
-    fun getTours(): List<Tour> = configLoader.load().getNode(TOURS_NODE).childrenMap.map { tourNode ->
-        Deserialization.deserialize(tourNode.value)
-    }
+    fun getTours(): Map<UUID, Tour> = configLoader.load().getNode(TOURS_NODE).childrenMap.map { tourNode ->
+        val tour = Deserialization.deserialize(tourNode.value)
+        tour.uuid to tour
+    }.toMap()
 
-    fun setTours(tours: List<Tour>) {
+    fun setTours(tours: Map<UUID, Tour>) {
         val rootNode = configLoader.load()
         val toursNode = rootNode.getNode(TOURS_NODE)
         toursNode.value = null //Clear
-        tours.forEach { Serialization.serialize(it, toursNode.getNode(it.uuid.toString())) }
+        tours.forEach { Serialization.serialize(it.value, toursNode.getNode(it.key.toString())) }
         configLoader.save(rootNode)
     }
 
-    fun addTour(tour: Tour) = setTours(getTours() + tour)
-    fun deleteTour(uuid: UUID) = setTours(getTours().filterNot { it.uuid.equals(uuid) })
-    fun getTour(uuid: UUID) = Optional.ofNullable<Tour>(getTours().firstOrNull { it.uuid.equals(uuid) })
+    fun addTour(tour: Tour) = setTours(getTours() + (tour.uuid to tour))
+    fun deleteTour(uuid: UUID) = setTours(getTours().filterNot { it.key.equals(uuid) })
+    fun getTour(uuid: UUID) = Optional.ofNullable<Tour>(getTours()[uuid])
+
+    fun addWaypoint(tour: Tour, waypoint: Waypoint) =
+        ConfigManager.setTours(ConfigManager.getTours() + (tour.uuid to tour.copy(waypoints = tour.waypoints + waypoint)))
 
     //Extracted from ListTourWaypointsCommand
     fun <T> List<T>.swap(first: Int, second: Int) = take(first) + get(second) + get(first) + drop(size - 1 - second)
-    fun moveWaypointUp(tour: Tour, waypointIndex: Int) =
-            setTours(getTours().filterNot { it.uuid.equals(tour.uuid) } + tour.copy(waypoints = tour.waypoints.swap(waypointIndex, waypointIndex - 1)))
-    fun moveWaypointDown(tour: Tour, waypointIndex: Int) =
-            setTours(getTours().filterNot { it.uuid.equals(tour.uuid) } + tour.copy(waypoints = tour.waypoints.swap(waypointIndex, waypointIndex + 1)))
+    private fun moveWaypointInDirection(tour: Tour, waypointIndex: Int, direction: Int) =
+            setTours(getTours() + (tour.uuid to tour.copy(waypoints = tour.waypoints.swap(waypointIndex, waypointIndex + direction))))
+    fun moveWaypointUp(tour: Tour, waypointIndex: Int) = moveWaypointInDirection(tour, waypointIndex, -1)
+    fun moveWaypointDown(tour: Tour, waypointIndex: Int) = moveWaypointInDirection(tour, waypointIndex, +1)
 
     private object Serialization {
         fun serialize(tour: Tour, node: ConfigurationNode) {
@@ -60,7 +63,7 @@ object ConfigManager {
 
         private fun serializeWaypoint(waypoint: Waypoint, node: ConfigurationNode): ConfigurationNode {
             serializeLocation(waypoint.location, node.getNode(LOCATION_NODE))
-            node.getNode(HEAD_ROTATION_NODE).value = serializeVector3d(waypoint.headRotation)
+            node.getNode(HEAD_ROTATION_NODE).value = serializeVector3i(waypoint.headRotation.toInt())
             node.getNode(INFO_TEXT_NODE).value = serializeText(waypoint.infoText)
             return node
         }
@@ -71,7 +74,6 @@ object ConfigManager {
         }
 
         private fun serializeVector3i(vector3i: Vector3i) = listOf(vector3i.x, vector3i.y, vector3i.z)
-        private fun serializeVector3d(vector3d: Vector3d) = listOf(vector3d.x, vector3d.y, vector3d.z)
 
         private fun serializeText(text: Text) = TextSerializers.FORMATTING_CODE.serialize(text)
     }
@@ -84,23 +86,19 @@ object ConfigManager {
 
         private fun deserializeWaypoint(node: ConfigurationNode): Waypoint =
                 Waypoint(deserializeLocation(node.getNode(LOCATION_NODE)),
-                        deserializeVector3d(node.getNode(HEAD_ROTATION_NODE)),
+                        deserializeVector3i(node.getNode(HEAD_ROTATION_NODE)).toDouble(),
                         deserializeText(node.getNode(INFO_TEXT_NODE).string))
 
         private fun deserializeLocation(node: ConfigurationNode): Location<World> {
             val worldUUID = node.getNode(WORLD_UUID_NODE).string
-            return Location(Sponge.getServer().getWorld(worldUUID)
+            return Location(Sponge.getServer().getWorld(UUID.fromString(worldUUID))
                     .orElseThrow { Exception("No world with uuid '$worldUUID' loaded!") },
                     deserializeVector3i(node.getNode(POSITION_NODE)))
         }
 
         private fun deserializeVector3i(node: ConfigurationNode): Vector3i {
-            val coordinatesList = node.getList(TypeToken.of(Int::class.java))
+            val coordinatesList = node.getValue(object : TypeToken<List<Int>>() {})
             return Vector3i(coordinatesList[0], coordinatesList[1], coordinatesList[2])
-        }
-        private fun deserializeVector3d(node: ConfigurationNode): Vector3d {
-            val coordinatesList = node.getList(TypeToken.of(Double::class.java))
-            return Vector3d(coordinatesList[0], coordinatesList[1], coordinatesList[2])
         }
 
         private fun deserializeText(text: String) = TextSerializers.FORMATTING_CODE.deserialize(text)

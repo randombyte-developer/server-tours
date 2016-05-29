@@ -16,9 +16,7 @@ import java.util.*
 
 class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
     override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
-        sendWaypointsList(player, ConfigManager.getTour(args.getOne<String>("tourUUID").asUUID()).orElseThrow {
-            "Haven't found any Tour with given tourUUID!".toCommandException()
-        })
+        sendWaypointsList(player, args.getTour())
         return CommandResult.success()
     }
 

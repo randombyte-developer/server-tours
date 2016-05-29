@@ -22,7 +22,7 @@ class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION)
         val SPACER = Text.of(TextColors.WHITE, " ===== ")
     }
     override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
-        val tours = ConfigManager.getTours()
+        val tours = ConfigManager.getTours().values.toList()
         if (tours.size > 0) {
             Sponge.getServiceManager().provide(PaginationService::class.java).ifPresent {
                 it.builder()
@@ -40,7 +40,7 @@ class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION)
             .append(SPACER)
             .append(Text.of(TextColors.YELLOW, "$tourCount saved Tour(s) | "))
             .append(Text.builder("[CREATE TOUR]").color(TextColors.GREEN)
-                    .onClick(TextActions.suggestCommand("/serverTours create")).build())
+                    .onClick(TextActions.runCommand("/serverTours create")).build())
             .append(SPACER)
             .build()
 

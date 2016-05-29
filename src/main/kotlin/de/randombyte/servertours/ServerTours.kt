@@ -1,10 +1,7 @@
 package de.randombyte.servertours
 
 import com.google.inject.Inject
-import de.randombyte.servertours.commands.CreateTourCommand
-import de.randombyte.servertours.commands.DeleteTourCommand
-import de.randombyte.servertours.commands.ListTourWaypointsCommand
-import de.randombyte.servertours.commands.ListToursCommand
+import de.randombyte.servertours.commands.*
 import de.randombyte.servertours.config.ConfigManager
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.loader.ConfigurationLoader
@@ -39,9 +36,9 @@ class ServerTours @Inject constructor(val logger: Logger,
 
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .executor(ListToursCommand())
-                //todo child commands: delete tour, delete waypoint, create waypoint, teleport waypoint
+                //todo child commands: delete waypoint, teleport waypoint
+                //Tours
                 .child(CommandSpec.builder()
-                        .arguments("tourName".toArgument())
                         .executor(CreateTourCommand())
                         .build(), "create", "add", "new")
                 .child(CommandSpec.builder()
@@ -52,6 +49,11 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .arguments("tourUUID".toArgument())
                         .executor(DeleteTourCommand())
                         .build(), "delete", "remove")
+                //Waypoints
+                .child(CommandSpec.builder()
+                        .arguments("tourUUID".toArgument())
+                        .executor(CreateWaypointCommand())
+                        .build(), "newWaypoint")
                 .build(), "serverTours")
 
         logger.info("$NAME loaded: $VERSION")
