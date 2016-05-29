@@ -9,9 +9,10 @@ import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.service.pagination.PaginationService
 import org.spongepowered.api.text.Text
-import org.spongepowered.api.text.action.TextAction
+import org.spongepowered.api.text.action.ClickAction
 import org.spongepowered.api.text.action.TextActions
 import org.spongepowered.api.text.format.TextColors
+import org.spongepowered.api.text.format.TextStyles
 import java.util.*
 
 class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
@@ -41,10 +42,12 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
 
     private fun getWaypointsTexts(tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
         Text.builder()
-                .append(getDeactivatableText("[/\\]", i > 0, TextActions.executeCallback {
+                .append(getDeactivatableText("▲", i != 0, TextActions.executeCallback {
+                    System.out.println("UP")
                     ConfigManager.moveWaypointUp(tour, i)
                 }))
-                .append(getDeactivatableText(" [\\/]", i == tour.waypoints.lastIndex, TextActions.executeCallback {
+                .append(getDeactivatableText("▼", i != tour.waypoints.lastIndex, TextActions.executeCallback {
+                    System.out.println("DOWN")
                     ConfigManager.moveWaypointDown(tour, i)
                 }))
                 .append(Text.of("#$i"))
@@ -55,6 +58,9 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
         .build()
     }
 
-    private fun <R> getDeactivatableText(text: String, activated: Boolean, textAction: TextAction<R>) =
-            Text.of(if (activated) TextColors.YELLOW else TextColors.GRAY, text, if (activated) textAction else null)
+    private fun getDeactivatableText(text: String, activated: Boolean, clickAction: ClickAction<*>): Text {
+        val builder = Text.builder(text)
+        if (activated) builder.onClick(clickAction)
+        return builder.color(TextColors.YELLOW).style(TextStyles.BOLD).build()
+    }
 }
