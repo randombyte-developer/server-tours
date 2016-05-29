@@ -3,6 +3,7 @@ package de.randombyte.servertours
 import com.google.inject.Inject
 import de.randombyte.servertours.commands.BaseCommand
 import de.randombyte.servertours.commands.CreateTourCommand
+import de.randombyte.servertours.commands.DeleteTourCommand
 import de.randombyte.servertours.commands.ListTourWaypointsCommand
 import de.randombyte.servertours.config.ConfigManager
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
@@ -47,6 +48,10 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .arguments("tourUUID".toArgument())
                         .executor(ListTourWaypointsCommand())
                         .build(), "list", "edit")
+                .child(CommandSpec.builder()
+                        .arguments("tourUUID".toArgument())
+                        .executor(DeleteTourCommand())
+                        .build(), "delete", "remove")
                 .build(), "serverTours")
 
         logger.info("$NAME loaded: $VERSION")

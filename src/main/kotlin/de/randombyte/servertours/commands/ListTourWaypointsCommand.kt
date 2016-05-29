@@ -3,8 +3,8 @@ package de.randombyte.servertours.commands
 import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
 import de.randombyte.servertours.config.ConfigManager
+import de.randombyte.servertours.commands.CommandUtils.toCommandException
 import org.spongepowered.api.Sponge
-import org.spongepowered.api.command.CommandException
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.entity.living.player.Player
@@ -17,12 +17,7 @@ import java.util.*
 
 class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
     override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
-        fun String.toCommandException() = CommandException(Text.of(this))
-        val uuid = try {
-            UUID.fromString(args.getOne<String>("tourUUID").orElseThrow { "tourUUID is missing!".toCommandException() })
-        } catch (illegalAraException: IllegalArgumentException) {
-            throw "Invalid UUID!".toCommandException()
-        }
+        val uuid = CommandUtils.getUUIDFromArg(args.getOne<String>("tourUUID"))
         sendWaypointsList(player, ConfigManager.getTourByUUID(uuid).orElseThrow {
             "Haven't found any Tour with given tourUUID!".toCommandException()
         })
