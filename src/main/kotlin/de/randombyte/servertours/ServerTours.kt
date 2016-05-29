@@ -1,10 +1,10 @@
 package de.randombyte.servertours
 
 import com.google.inject.Inject
-import de.randombyte.servertours.commands.BaseCommand
 import de.randombyte.servertours.commands.CreateTourCommand
 import de.randombyte.servertours.commands.DeleteTourCommand
 import de.randombyte.servertours.commands.ListTourWaypointsCommand
+import de.randombyte.servertours.commands.ListToursCommand
 import de.randombyte.servertours.config.ConfigManager
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.loader.ConfigurationLoader
@@ -38,7 +38,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         fun String.toArgument() = GenericArguments.string(Text.of(this))
 
         Sponge.getCommandManager().register(this, CommandSpec.builder()
-                .executor(BaseCommand())
+                .executor(ListToursCommand())
                 //todo child commands: delete tour, delete waypoint, create waypoint, teleport waypoint
                 .child(CommandSpec.builder()
                         .arguments("tourName".toArgument())

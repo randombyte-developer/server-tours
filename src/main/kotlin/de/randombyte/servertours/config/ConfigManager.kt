@@ -41,7 +41,9 @@ object ConfigManager {
         configLoader.save(rootNode)
     }
 
-    fun getTourByUUID(uuid: UUID) = Optional.ofNullable<Tour>(getTours().firstOrNull { it.uuid.equals(uuid) })
+    fun addTour(tour: Tour) = setTours(getTours() + tour)
+    fun deleteTour(uuid: UUID) = setTours(getTours().filterNot { it.uuid.equals(uuid) })
+    fun getTour(uuid: UUID) = Optional.ofNullable<Tour>(getTours().firstOrNull { it.uuid.equals(uuid) })
 
     //Extracted from ListTourWaypointsCommand
     fun <T> List<T>.swap(first: Int, second: Int) = take(first) + get(second) + get(first) + drop(size - 1 - second)

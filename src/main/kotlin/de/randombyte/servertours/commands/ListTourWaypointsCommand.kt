@@ -3,7 +3,6 @@ package de.randombyte.servertours.commands
 import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
 import de.randombyte.servertours.config.ConfigManager
-import de.randombyte.servertours.commands.CommandUtils.toCommandException
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.args.CommandContext
@@ -17,8 +16,7 @@ import java.util.*
 
 class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
     override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
-        val uuid = CommandUtils.getUUIDFromArg(args.getOne<String>("tourUUID"))
-        sendWaypointsList(player, ConfigManager.getTourByUUID(uuid).orElseThrow {
+        sendWaypointsList(player, ConfigManager.getTour(args.getOne<String>("tourUUID").asUUID()).orElseThrow {
             "Haven't found any Tour with given tourUUID!".toCommandException()
         })
         return CommandResult.success()
@@ -34,10 +32,10 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
     }
 
     private fun getHeader(tour: Tour) = Text.builder()
-            .append(BaseCommand.SPACER)
+            .append(ListToursCommand.SPACER)
             .append(Text.of(TextColors.YELLOW, "${tour.waypoints.size} Waypoint(s) | "))
             .append(getCreateWaypointButton(tour.uuid))
-            .append(BaseCommand.SPACER)
+            .append(ListToursCommand.SPACER)
             .build()
 
     private fun getCreateWaypointButton(tourUUID: UUID) = Text.builder(" [NEW WAYPOINT]").color(TextColors.RED)
