@@ -40,7 +40,7 @@ class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION)
             .append(SPACER)
             .append(Text.of(TextColors.YELLOW, "$tourCount saved Tour(s) | "))
             .append(Text.builder("[CREATE TOUR]").color(TextColors.GREEN)
-                    .onClick(TextActions.suggestCommand("/serverTours create <tourName>")).build())
+                    .onClick(TextActions.suggestCommand("/serverTours create")).build())
             .append(SPACER)
             .build()
 
