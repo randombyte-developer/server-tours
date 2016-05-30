@@ -45,11 +45,11 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
     private fun getWaypointsTexts(player: Player, tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
         Text.builder()
                 .append(getDeactivatableText("▲", i != 0, TextActions.executeCallback {
-                    ConfigManager.moveWaypointUp(tour, i)
+                    ConfigManager.moveWaypoint(tour, i, ConfigManager.Direction.UP)
                     player.executeCommand("serverTours list ${tour.uuid}") //Show waypoint list after reordering
                 }))
                 .append(getDeactivatableText("▼", i != tour.waypoints.lastIndex, TextActions.executeCallback {
-                    ConfigManager.moveWaypointDown(tour, i)
+                    ConfigManager.moveWaypoint(tour, i, ConfigManager.Direction.DOWN)
                     player.executeCommand("serverTours list ${tour.uuid}")
                 }))
                 .append(Text.of("#$i"))

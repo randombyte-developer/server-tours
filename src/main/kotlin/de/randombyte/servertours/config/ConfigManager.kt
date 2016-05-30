@@ -48,12 +48,20 @@ object ConfigManager {
     fun addWaypoint(tour: Tour, waypoint: Waypoint) =
         ConfigManager.setTours(ConfigManager.getTours() + (tour.uuid to tour.copy(waypoints = tour.waypoints + waypoint)))
 
-    //Extracted from ListTourWaypointsCommand
-    fun <T> List<T>.swap(first: Int, second: Int) = take(first) + get(second) + get(first) + drop(size - 1 - second)
-    private fun moveWaypointInDirection(tour: Tour, waypointIndex: Int, direction: Int) =
-            setTours(getTours() + (tour.uuid to tour.copy(waypoints = tour.waypoints.swap(waypointIndex, waypointIndex + direction))))
-    fun moveWaypointUp(tour: Tour, waypointIndex: Int) = moveWaypointInDirection(tour, waypointIndex, -1)
-    fun moveWaypointDown(tour: Tour, waypointIndex: Int) = moveWaypointInDirection(tour, waypointIndex, +1)
+    /*Extracted from ListTourWaypointsCommand*/
+    fun <T> List<T>.swap(first: Int, second: Int): List<T> {
+        return take(first) + get(second) + get(first) + drop(size - 1 - second)
+    }
+
+    enum class Direction {UP, DOWN}
+    fun moveWaypoint(tour: Tour, waypointIndex: Int, direction: Direction) {
+        val newTour = when (direction) {
+            Direction.UP -> tour.copy(waypoints = tour.waypoints.swap(waypointIndex - 1, waypointIndex))
+            Direction.DOWN -> tour.copy(waypoints = tour.waypoints.swap(waypointIndex, waypointIndex + 1))
+        }
+        setTours(getTours() + (tour.uuid to newTour))
+    }
+    /*                                       */
 
     private object Serialization {
         fun serialize(tour: Tour, node: ConfigurationNode) {
