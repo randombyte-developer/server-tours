@@ -50,6 +50,10 @@ object ConfigManager {
     }
 
     fun <T> List<T>.swap(first: Int, second: Int): List<T> {
-        return take(first) + get(second) + get(first) + drop(size - 1 - second)
+        val take = take(first)
+        val get = get(second)
+        val get1 = get(first)
+        val drop = drop(second + 1)
+        return take + get + get1 + drop
     }
 }
