@@ -53,6 +53,7 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
                     player.executeCommand("serverTours list ${tour.uuid}")
                 }))
                 .append(Text.of("#$i"))
+                .append(Text.of(" \"", waypoint.infoText.subsequence(0, 50), "\""))
                 .append(Text.builder(" [TELEPORT]").color(TextColors.YELLOW)
                         .onClick(TextActions.runCommand("/serverTours teleport ${tour.uuid} $i")).build())
                 .append(Text.builder(" [DELETE]").color(TextColors.RED).
@@ -65,4 +66,7 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
         if (activated) builder.onClick(clickAction)
         return builder.color(TextColors.YELLOW).style(TextStyles.BOLD).build()
     }
+
+    private fun Text.subsequence(startIndex: Int, endIndex: Int) =
+            Text.of(toPlain().subSequence(startIndex, if (endIndex > toPlain().lastIndex) toPlain().lastIndex else endIndex))
 }
