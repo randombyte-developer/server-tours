@@ -25,30 +25,32 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
         Sponge.getServiceManager().provide(PaginationService::class.java).ifPresent {
             it.builder()
                     .header(getHeader(tour))
-                    .contents(getWaypointsTexts(tour))
+                    .contents(getWaypointsTexts(player, tour))
                     .sendTo(player)
         }
     }
 
     private fun getHeader(tour: Tour) = Text.builder()
-            .append(ListToursCommand.SPACER)
+            .append(ListToursCommand.getSpacer(3))
+            .append(Text.builder("[BACK]").color(TextColors.YELLOW).onClick(TextActions.runCommand("/serverTours")).build())
+            .append(ListToursCommand.getSpacer(3))
             .append(Text.of(TextColors.YELLOW, "${tour.waypoints.size} Waypoint(s) | "))
             .append(getCreateWaypointButton(tour.uuid))
-            .append(ListToursCommand.SPACER)
+            .append(ListToursCommand.getSpacer(10))
             .build()
 
     private fun getCreateWaypointButton(tourUUID: UUID) = Text.builder(" [NEW WAYPOINT]").color(TextColors.RED)
             .onClick(TextActions.runCommand("/serverTours newWaypoint $tourUUID")).build()
 
-    private fun getWaypointsTexts(tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
+    private fun getWaypointsTexts(player: Player, tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
         Text.builder()
                 .append(getDeactivatableText("▲", i != 0, TextActions.executeCallback {
-                    System.out.println("UP")
                     ConfigManager.moveWaypointUp(tour, i)
+                    player.executeCommand("serverTours list ${tour.uuid}") //Show waypoint list after reordering
                 }))
                 .append(getDeactivatableText("▼", i != tour.waypoints.lastIndex, TextActions.executeCallback {
-                    System.out.println("DOWN")
                     ConfigManager.moveWaypointDown(tour, i)
+                    player.executeCommand("serverTours list ${tour.uuid}")
                 }))
                 .append(Text.of("#$i"))
                 .append(Text.builder(" [TELEPORT]").color(TextColors.YELLOW)

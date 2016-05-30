@@ -19,7 +19,7 @@ import java.util.*
  */
 class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
     companion object {
-        val SPACER = Text.of(TextColors.WHITE, " ===== ")
+        fun getSpacer(amount: Int) = Text.of(TextColors.WHITE, " ${"=".repeat(amount)} ")
     }
     override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
         val tours = ConfigManager.getTours().values.toList()
@@ -37,11 +37,11 @@ class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION)
     }
 
     private fun getHeader(tourCount: Int) = Text.builder()
-            .append(SPACER)
+            .append(getSpacer(10))
             .append(Text.of(TextColors.YELLOW, "$tourCount saved Tour(s) | "))
             .append(Text.builder("[CREATE TOUR]").color(TextColors.GREEN)
                     .onClick(TextActions.runCommand("/serverTours create")).build())
-            .append(SPACER)
+            .append(getSpacer(10))
             .build()
 
     private fun getEditTourButton(tourUUID: UUID) = Text.builder(" [EDIT]").color(TextColors.YELLOW)
