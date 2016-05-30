@@ -63,8 +63,10 @@ class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PER
 
     private fun getDeactivatableText(text: String, activated: Boolean, clickAction: ClickAction<*>): Text {
         val builder = Text.builder(text)
-        if (activated) builder.onClick(clickAction)
-        return builder.color(TextColors.YELLOW).style(TextStyles.BOLD).build()
+        return when {
+            activated -> builder.color(TextColors.YELLOW).onClick(clickAction)
+            else -> builder.color(TextColors.GRAY)
+        }.style(TextStyles.BOLD).build()
     }
 
     private fun Text.subsequence(startIndex: Int, endIndex: Int) =
