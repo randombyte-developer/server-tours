@@ -35,22 +35,27 @@ class ServerTours @Inject constructor(val logger: Logger,
         fun String.toArgument() = GenericArguments.string(Text.of(this))
 
         Sponge.getCommandManager().register(this, CommandSpec.builder()
+                .permission(PERMISSION)
                 .executor(ListToursCommand())
                 //todo child commands: delete waypoint, teleport waypoint
                 //Tours
                 .child(CommandSpec.builder()
+                        .permission(PERMISSION)
                         .executor(CreateTourCommand())
                         .build(), "create", "add", "new")
                 .child(CommandSpec.builder()
+                        .permission(PERMISSION)
                         .arguments("tourUUID".toArgument())
                         .executor(ListTourWaypointsCommand())
                         .build(), "list", "edit")
                 .child(CommandSpec.builder()
+                        .permission(PERMISSION)
                         .arguments("tourUUID".toArgument())
                         .executor(DeleteTourCommand())
                         .build(), "delete", "remove")
                 //Waypoints
                 .child(CommandSpec.builder()
+                        .permission(PERMISSION)
                         .arguments("tourUUID".toArgument())
                         .executor(CreateWaypointCommand())
                         .build(), "newWaypoint")

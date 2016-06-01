@@ -1,6 +1,5 @@
 package de.randombyte.servertours.commands
 
-import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
 import de.randombyte.servertours.config.ConfigManager
 import org.spongepowered.api.Sponge
@@ -17,11 +16,12 @@ import java.util.*
  * This command should be the only one typed by the user. All other commands that need to be executed should be pre-filled
  * by a text-GUI-click.
  */
-class ListToursCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
+class ListToursCommand : PlayerCommandExecutor() {
     companion object {
         fun getSpacer(amount: Int) = Text.of(TextColors.WHITE, " ${"=".repeat(amount)} ")
     }
-    override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
+
+    override fun executedByPlayer(player: Player, args: CommandContext): CommandResult {
         val tours = ConfigManager.getTours().values.toList()
         if (tours.size > 0) {
             Sponge.getServiceManager().provide(PaginationService::class.java).ifPresent {

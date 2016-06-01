@@ -1,6 +1,5 @@
 package de.randombyte.servertours.commands
 
-import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
 import de.randombyte.servertours.config.ConfigManager
 import org.spongepowered.api.Sponge
@@ -15,8 +14,8 @@ import org.spongepowered.api.text.format.TextColors
 import org.spongepowered.api.text.format.TextStyles
 import java.util.*
 
-class ListTourWaypointsCommand : PermissionNeededCommandExecutor(ServerTours.PERMISSION) {
-    override fun executedWithPermission(player: Player, args: CommandContext): CommandResult {
+class ListTourWaypointsCommand : PlayerCommandExecutor(){
+    override fun executedByPlayer(player: Player, args: CommandContext): CommandResult {
         sendWaypointsList(player, args.getTour())
         return CommandResult.success()
     }
