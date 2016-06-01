@@ -56,7 +56,7 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
                 .append(Text.builder(" [TELEPORT]").color(TextColors.YELLOW)
                         .onClick(TextActions.runCommand("/serverTours teleport ${tour.uuid} $i")).build())
                 .append(Text.builder(" [DELETE]").color(TextColors.RED).
-                        onClick(TextActions.runCommand("/serverTours delete ${tour.uuid} $i")).build())
+                        onClick(TextActions.suggestCommand("/serverTours deleteWaypoint ${tour.uuid} $i")).build())
         .build()
     }
 

@@ -32,7 +32,8 @@ class ServerTours @Inject constructor(val logger: Logger,
     fun onInit(event: GameInitializationEvent) {
         ConfigManager.configLoader = configLoader
 
-        fun String.toArgument() = GenericArguments.string(Text.of(this))
+        fun String.toStringArg() = GenericArguments.string(Text.of(this))
+        fun String.toIntArg() = GenericArguments.integer(Text.of(this))
 
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .permission(PERMISSION)
@@ -45,20 +46,25 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .build(), "create", "add", "new")
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
-                        .arguments("tourUUID".toArgument())
+                        .arguments("tourUUID".toStringArg())
                         .executor(ListTourWaypointsCommand())
                         .build(), "list", "edit")
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
-                        .arguments("tourUUID".toArgument())
+                        .arguments("tourUUID".toStringArg())
                         .executor(DeleteTourCommand())
                         .build(), "delete", "remove")
                 //Waypoints
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
-                        .arguments("tourUUID".toArgument())
+                        .arguments("tourUUID".toStringArg())
                         .executor(CreateWaypointCommand())
                         .build(), "newWaypoint")
+                .child(CommandSpec.builder()
+                        .permission(PERMISSION)
+                        .arguments(GenericArguments.seq("tourUUID".toStringArg(), "waypointIndex".toIntArg()))
+                        .executor(DeleteWaypointCommand())
+                        .build(), "deleteWaypoint")
                 .build(), "serverTours")
 
         logger.info("$NAME loaded: $VERSION")

@@ -39,6 +39,9 @@ object ConfigManager {
 
     fun addWaypoint(tour: Tour, waypoint: Waypoint) =
         ConfigManager.setTours(ConfigManager.getTours() + (tour.uuid to tour.copy(waypoints = tour.waypoints + waypoint)))
+    fun deleteWaypoint(tour: Tour, index: Int) =
+            ConfigManager.setTours(ConfigManager.getTours() +
+                    (tour.uuid to tour.copy(waypoints = tour.waypoints.filterIndexed { i, waypoint -> i != index })))
 
     enum class Direction {UP, DOWN}
     fun moveWaypoint(tour: Tour, waypointIndex: Int, direction: Direction) {
