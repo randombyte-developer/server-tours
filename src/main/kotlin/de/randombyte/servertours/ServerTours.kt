@@ -38,7 +38,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .permission(PERMISSION)
                 .executor(ListToursCommand())
-                //todo child commands: delete waypoint, teleport waypoint
+                //todo child commands: teleport waypoint
                 //Tours
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
@@ -65,6 +65,10 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .arguments(GenericArguments.seq("tourUUID".toStringArg(), "waypointIndex".toIntArg()))
                         .executor(DeleteWaypointCommand())
                         .build(), "deleteWaypoint")
+                .child(CommandSpec.builder()
+                        .arguments(GenericArguments.seq("tourUUID".toStringArg(), "waypointIndex".toIntArg()))
+                        .executor(TeleportToWaypointCommand())
+                        .build(), "teleport")
                 .build(), "serverTours")
 
         logger.info("$NAME loaded: $VERSION")
