@@ -16,10 +16,13 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         val waypointIndex = args.getWaypointIndex()
         player.location = tour.waypoints[waypointIndex].location
         player.sendMessage(Text.of("Info-text: ", tour.waypoints[waypointIndex].infoText))
-        player.sendMessage(getPreviousWaypointButton(tour, waypointIndex))
-        player.sendMessage(getNextWayppointButton(tour, waypointIndex))
+        player.sendMessage(getNavigationButtons(tour, waypointIndex))
         return CommandResult.success()
     }
+
+    private fun getNavigationButtons(tour: Tour, waypointIndex: Int) = Text.builder()
+            .append(getPreviousWaypointButton(tour, waypointIndex))
+            .append(getNextWayppointButton(tour, waypointIndex)).build()
 
     private fun getPreviousWaypointButton(tour: Tour, currentWaypointIndex: Int) =
             getDeactivatableText(Text.of("[PREVIOUS WAYPOINT]"), tour.waypoints.indices.contains(currentWaypointIndex - 1),

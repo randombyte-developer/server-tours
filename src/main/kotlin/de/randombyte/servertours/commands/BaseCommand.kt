@@ -10,7 +10,6 @@ import org.spongepowered.api.command.spec.CommandExecutor
 import org.spongepowered.api.text.Text
 import org.spongepowered.api.text.action.ClickAction
 import org.spongepowered.api.text.format.TextColors
-import org.spongepowered.api.text.format.TextStyles
 import java.util.*
 
 /**
@@ -44,6 +43,6 @@ abstract class BaseCommand : CommandExecutor {
         return when (activated) {
             true -> builder.color(TextColors.YELLOW).onClick(clickAction)
             false -> builder.color(TextColors.GRAY)
-        }.style(TextStyles.BOLD).build()
+        }.build()
     }
 }
