@@ -45,7 +45,7 @@ class ListToursCommand : PlayerCommandExecutor() {
             .build()
 
     private fun getStartTourButton(tourUUID: UUID) = Text.builder(" [START]").color(TextColors.GREEN)
-            .onClick(TextActions.suggestCommand("/serverTours start $tourUUID")).build()
+            .onClick(TextActions.runCommand("/serverTours start $tourUUID")).build()
 
     private fun getEditTourButton(tourUUID: UUID) = Text.builder(" [EDIT]").color(TextColors.YELLOW)
             .onClick(TextActions.runCommand("/serverTours edit $tourUUID")).build()
