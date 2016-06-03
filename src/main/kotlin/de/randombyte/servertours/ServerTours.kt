@@ -25,7 +25,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         const val VERSION = "v0.1"
         const val AUTHOR = "RandomByte"
 
-        const val PERMISSION = "de.randombyte.servertours"
+        const val PERMISSION = "de.randombyte.servertours.edit"
     }
 
     @Listener
@@ -38,7 +38,6 @@ class ServerTours @Inject constructor(val logger: Logger,
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .permission(PERMISSION)
                 .executor(ListToursCommand())
-                //todo child commands: teleport waypoint
                 //Tours
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
@@ -54,6 +53,10 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .arguments("tourUUID".toStringArg())
                         .executor(DeleteTourCommand())
                         .build(), "delete", "remove")
+                .child(CommandSpec.builder()
+                        .arguments("tourUUID".toStringArg())
+                        .executor(StartTourCommand())
+                        .build(), "start")
                 //Waypoints
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)

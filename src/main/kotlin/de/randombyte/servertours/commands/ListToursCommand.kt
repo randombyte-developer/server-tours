@@ -44,6 +44,9 @@ class ListToursCommand : PlayerCommandExecutor() {
             .append(getSpacer(10))
             .build()
 
+    private fun getStartTourButton(tourUUID: UUID) = Text.builder(" [START]").color(TextColors.GREEN)
+            .onClick(TextActions.suggestCommand("/serverTours start $tourUUID")).build()
+
     private fun getEditTourButton(tourUUID: UUID) = Text.builder(" [EDIT]").color(TextColors.YELLOW)
             .onClick(TextActions.runCommand("/serverTours edit $tourUUID")).build()
 
@@ -53,6 +56,7 @@ class ListToursCommand : PlayerCommandExecutor() {
     private fun getToursTexts(tours: List<Tour>): List<Text> = tours.map { tour ->
         Text.builder()
                 .append(tour.name.toBuilder().onHover(TextActions.showText(Text.of(tour.uuid))).build())
+                .append(getStartTourButton(tour.uuid))
                 .append(getEditTourButton(tour.uuid))
                 .append(getDeleteTourButton(tour.uuid))
         .build()
