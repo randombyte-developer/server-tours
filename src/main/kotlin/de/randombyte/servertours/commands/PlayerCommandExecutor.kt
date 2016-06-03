@@ -16,7 +16,6 @@ abstract class PlayerCommandExecutor : BaseCommand() {
         return executedByPlayer(src, args)
     }
 
-
     /**
      * Gets called when this command is executed by a [Player].
      */
