@@ -28,7 +28,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         const val VERSION = "v0.1"
         const val AUTHOR = "RandomByte"
 
-        const val PERMISSION = "de.randombyte.servertours.edit"
+        const val PERMISSION = "de.randombyte.servertours"
 
         val playerStartLocations = mutableMapOf<UUID, Location<World>>()
     }
