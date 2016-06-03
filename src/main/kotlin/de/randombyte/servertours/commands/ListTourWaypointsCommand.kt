@@ -8,10 +8,8 @@ import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.service.pagination.PaginationService
 import org.spongepowered.api.text.Text
-import org.spongepowered.api.text.action.ClickAction
 import org.spongepowered.api.text.action.TextActions
 import org.spongepowered.api.text.format.TextColors
-import org.spongepowered.api.text.format.TextStyles
 import java.util.*
 
 class ListTourWaypointsCommand : PlayerCommandExecutor(){
@@ -43,11 +41,11 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
 
     private fun getWaypointsTexts(player: Player, tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
         Text.builder()
-                .append(getDeactivatableText("▲", i != 0, TextActions.executeCallback {
+                .append(getDeactivatableText(Text.of("▲"), i != 0, TextActions.executeCallback {
                     ConfigManager.moveWaypoint(tour, i, ConfigManager.Direction.UP)
                     player.executeCommand("serverTours list ${tour.uuid}") //Show waypoint list after reordering
                 }))
-                .append(getDeactivatableText("▼", i != tour.waypoints.lastIndex, TextActions.executeCallback {
+                .append(getDeactivatableText(Text.of("▼"), i != tour.waypoints.lastIndex, TextActions.executeCallback {
                     ConfigManager.moveWaypoint(tour, i, ConfigManager.Direction.DOWN)
                     player.executeCommand("serverTours list ${tour.uuid}")
                 }))
@@ -58,14 +56,6 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
                 .append(Text.builder(" [DELETE]").color(TextColors.RED).
                         onClick(TextActions.suggestCommand("/serverTours deleteWaypoint ${tour.uuid} $i")).build())
         .build()
-    }
-
-    private fun getDeactivatableText(text: String, activated: Boolean, clickAction: ClickAction<*>): Text {
-        val builder = Text.builder(text)
-        return when {
-            activated -> builder.color(TextColors.YELLOW).onClick(clickAction)
-            else -> builder.color(TextColors.GRAY)
-        }.style(TextStyles.BOLD).build()
     }
 
     private fun Text.subsequence(startIndex: Int, endIndex: Int) =

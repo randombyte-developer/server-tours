@@ -8,8 +8,14 @@ import org.spongepowered.api.command.CommandSource
 import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.command.spec.CommandExecutor
 import org.spongepowered.api.text.Text
+import org.spongepowered.api.text.action.ClickAction
+import org.spongepowered.api.text.format.TextColors
+import org.spongepowered.api.text.format.TextStyles
 import java.util.*
 
+/**
+ * This class is the superclass of all command executors in this plugin. Here are some helper methods.
+ */
 abstract class BaseCommand : CommandExecutor {
     fun CommandSource.executeCommand(command: String) = Sponge.getCommandManager().process(this, command)
     fun String.toCommandException() = CommandException(Text.of(this))
@@ -31,5 +37,13 @@ abstract class BaseCommand : CommandExecutor {
         val id = this.orElseThrow { "waypointIndex is missing!".toCommandException() }
         if (!tour.waypoints.indices.contains(id)) throw "Haven't found specified Waypoint in Tour!".toCommandException()
         return id
+    }
+
+    fun getDeactivatableText(text: Text, activated: Boolean, clickAction: ClickAction<*>): Text {
+        val builder = text.toBuilder()
+        return when (activated) {
+            true -> builder.color(TextColors.YELLOW).onClick(clickAction)
+            false -> builder.color(TextColors.GRAY)
+        }.style(TextStyles.BOLD).build()
     }
 }
