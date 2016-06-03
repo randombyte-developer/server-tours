@@ -14,6 +14,9 @@ import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.game.state.GameInitializationEvent
 import org.spongepowered.api.plugin.Plugin
 import org.spongepowered.api.text.Text
+import org.spongepowered.api.world.Location
+import org.spongepowered.api.world.World
+import java.util.*
 
 @Plugin(id = ServerTours.ID, name = ServerTours.NAME, version = ServerTours.VERSION, authors = arrayOf(ServerTours.AUTHOR))
 class ServerTours @Inject constructor(val logger: Logger,
@@ -26,6 +29,8 @@ class ServerTours @Inject constructor(val logger: Logger,
         const val AUTHOR = "RandomByte"
 
         const val PERMISSION = "de.randombyte.servertours.edit"
+
+        val playerStartLocations = mutableMapOf<UUID, Location<World>>()
     }
 
     @Listener

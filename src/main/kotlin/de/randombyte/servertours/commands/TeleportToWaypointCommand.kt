@@ -16,19 +16,28 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         val waypointIndex = args.getWaypointIndex()
         player.location = tour.waypoints[waypointIndex].location
         player.sendMessage(Text.of("Info-text: ", tour.waypoints[waypointIndex].infoText))
-        player.sendMessage(getNavigationButtons(tour, waypointIndex))
+        player.sendMessage(getNavigationButtons(tour, waypointIndex, player))
         return CommandResult.success()
     }
 
-    private fun getNavigationButtons(tour: Tour, waypointIndex: Int) = Text.builder()
+    private fun getNavigationButtons(tour: Tour, waypointIndex: Int, player: Player) = Text.builder()
             .append(getPreviousWaypointButton(tour, waypointIndex))
-            .append(getNextWayppointButton(tour, waypointIndex)).build()
+            .append(getNextWayppointButton(tour, waypointIndex, player)).build()
 
     private fun getPreviousWaypointButton(tour: Tour, currentWaypointIndex: Int) =
             getDeactivatableText(Text.of("[PREVIOUS WAYPOINT]"), tour.waypoints.indices.contains(currentWaypointIndex - 1),
                     TextActions.runCommand("/serverTours teleport ${tour.uuid} ${currentWaypointIndex - 1}"))
 
-    private fun getNextWayppointButton(tour: Tour, currentWaypointIndex: Int) =
-            getDeactivatableText(Text.of(" [NEXT WAYPOINT]"), tour.waypoints.indices.contains(currentWaypointIndex + 1),
+    private fun getNextWayppointButton(tour: Tour, currentWaypointIndex: Int, player: Player): Text {
+        val nextWaypointExists = tour.waypoints.indices.contains(currentWaypointIndex + 1)
+        return if (!nextWaypointExists && ServerTours.playerStartLocations.containsKey(player.uniqueId)) {
+            getDeactivatableText(Text.of(" [END TOUR]"), true, TextActions.executeCallback {
+                val homeLocation = ServerTours.playerStartLocations.remove(player.uniqueId)
+                if (homeLocation != null) player.location = homeLocation
+            })
+        } else {
+            getDeactivatableText(Text.of(" [NEXT WAYPOINT]"), nextWaypointExists,
                     TextActions.runCommand("/serverTours teleport ${tour.uuid} ${currentWaypointIndex + 1}"))
+        }
+    }
 }
