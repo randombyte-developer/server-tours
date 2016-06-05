@@ -36,7 +36,7 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
             .append(ListToursCommand.getSpacer(10))
             .build()
 
-    private fun getCreateWaypointButton(tourUUID: UUID) = Text.builder(" [NEW WAYPOINT]").color(TextColors.RED)
+    private fun getCreateWaypointButton(tourUUID: UUID) = Text.builder(" [NEW WAYPOINT]").color(TextColors.GREEN)
             .onClick(TextActions.runCommand("/serverTours newWaypoint $tourUUID")).build()
 
     private fun getWaypointsTexts(player: Player, tour: Tour) = tour.waypoints.mapIndexed { i, waypoint ->
