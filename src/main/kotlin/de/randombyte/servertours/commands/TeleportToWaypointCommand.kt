@@ -14,7 +14,8 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         if (!player.hasPermission("${ServerTours.PERMISSION}.${tour.uuid}"))
             throw "You don't have the permission to teleport to that Waypoint!".toCommandException()
         val waypointIndex = args.getWaypointIndex()
-        player.location = tour.waypoints[waypointIndex].location
+        val waypoint = tour.waypoints[waypointIndex]
+        player.setLocationAndRotationSafely(waypoint.location, waypoint.headRotation)
         player.sendMessage(Text.of("Info-text: ", tour.waypoints[waypointIndex].infoText))
         player.sendMessage(getNavigationButtons(tour, waypointIndex, player))
         return CommandResult.success()
