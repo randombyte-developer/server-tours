@@ -43,6 +43,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .permission(PERMISSION)
                 .executor(ListToursCommand())
+                .description(Text.of("This is the only important command because all other commands are called by the text GUI."))
                 //Tours
                 .child(CommandSpec.builder()
                         .permission(PERMISSION)
