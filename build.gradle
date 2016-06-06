@@ -1,5 +1,5 @@
 plugins {
-    id "com.zoltu.kotlin" version "1.0.1"
+    id "com.zoltu.kotlin" version "1.0.2"
     id "com.qixalite.spongestart" version "1.4.5"
 }
 
@@ -22,10 +22,13 @@ configurations {
     compile.extendsFrom shade
 }
 
+ext.apiVersion = '4.0.3'
+
 dependencies {
     shade "org.jetbrains.kotlin:kotlin-runtime:1.0.1"
     shade "org.jetbrains.kotlin:kotlin-stdlib:1.0.1"
-    compile "org.spongepowered:spongeapi:4.0.3"
+    compile "org.spongepowered:spongeapi:$apiVersion"
+    kapt "org.spongepowered:spongeapi:$apiVersion"
 }
 
 //https://forgegradle.readthedocs.org/en/latest/user-guide/shading/
