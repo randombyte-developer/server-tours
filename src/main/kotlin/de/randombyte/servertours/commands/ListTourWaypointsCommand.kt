@@ -10,6 +10,7 @@ import org.spongepowered.api.service.pagination.PaginationService
 import org.spongepowered.api.text.Text
 import org.spongepowered.api.text.action.TextActions
 import org.spongepowered.api.text.format.TextColors
+import org.spongepowered.api.text.serializer.TextSerializers
 import java.util.*
 
 class ListTourWaypointsCommand : PlayerCommandExecutor(){
@@ -50,7 +51,7 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
                     player.executeCommand("serverTours list ${tour.uuid}")
                 }))
                 .append(Text.of("#$i"))
-                .append(Text.of(" \"", waypoint.infoText.subsequence(0, 50), "\""))
+                .append(Text.of(" \"", waypoint.infoText.cut(25), "\""))
                 .append(Text.builder(" [TELEPORT]").color(TextColors.YELLOW)
                         .onClick(TextActions.runCommand("/serverTours teleport ${tour.uuid} $i")).build())
                 .append(Text.builder(" [DELETE]").color(TextColors.RED).
@@ -58,6 +59,18 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
         .build()
     }
 
-    private fun Text.subsequence(startIndex: Int, endIndex: Int) =
-            Text.of(toPlain().subSequence(startIndex, if (endIndex > toPlain().lastIndex) toPlain().lastIndex else endIndex))
+    /**
+     * Cuts the [Text] off at the [endIndex]. This method is designed to only work with styled and colored Text, not with
+     * [TextActions]. The [endIndex] is counted with the formatting codes like '&c'.
+     */
+    private fun Text.cut(endIndex: Int): Text {
+        val formattingCodeString = TextSerializers.FORMATTING_CODE.serialize(this)
+        val lastIndex = formattingCodeString.length
+        System.out.println(formattingCodeString
+                .substring(0, if (endIndex > lastIndex) lastIndex else endIndex)
+                .removeSuffix("&"))
+        return TextSerializers.FORMATTING_CODE.deserialize(formattingCodeString
+                        .substring(0, if (endIndex > lastIndex) lastIndex else endIndex)
+                        .removeSuffix("&")) //to remove a half cut off formatting code like 'cool text &'
+    }
 }
