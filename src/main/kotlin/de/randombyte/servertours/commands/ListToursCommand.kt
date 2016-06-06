@@ -55,7 +55,9 @@ class ListToursCommand : PlayerCommandExecutor() {
 
     private fun getToursTexts(tours: List<Tour>): List<Text> = tours.map { tour ->
         Text.builder()
-                .append(tour.name.toBuilder().onHover(TextActions.showText(Text.of(tour.uuid))).build())
+                .append(Text.of("\""))
+                .append(tour.name.toBuilder() .onHover(TextActions.showText(Text.of(tour.uuid))).build())
+                .append(Text.of("\""))
                 .append(getStartTourButton(tour.uuid))
                 .append(getEditTourButton(tour.uuid))
                 .append(getDeleteTourButton(tour.uuid))
