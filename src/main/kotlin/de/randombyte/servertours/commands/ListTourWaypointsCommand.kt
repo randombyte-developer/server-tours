@@ -66,9 +66,6 @@ class ListTourWaypointsCommand : PlayerCommandExecutor(){
     private fun Text.cut(endIndex: Int): Text {
         val formattingCodeString = TextSerializers.FORMATTING_CODE.serialize(this)
         val lastIndex = formattingCodeString.length
-        System.out.println(formattingCodeString
-                .substring(0, if (endIndex > lastIndex) lastIndex else endIndex)
-                .removeSuffix("&"))
         return TextSerializers.FORMATTING_CODE.deserialize(formattingCodeString
                         .substring(0, if (endIndex > lastIndex) lastIndex else endIndex)
                         .removeSuffix("&")) //to remove a half cut off formatting code like 'cool text &'
