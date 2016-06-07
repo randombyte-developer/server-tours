@@ -23,9 +23,9 @@ class ServerTours @Inject constructor(val logger: Logger,
                                       @DefaultConfig(sharedRoot = true) val configLoader: ConfigurationLoader<CommentedConfigurationNode>) {
 
     companion object {
-        const val NAME = "de.randombyte.servertours.ServerTours"
+        const val NAME = "ServerTours"
         const val ID = "de.randombyte.servertours"
-        const val VERSION = "v0.1"
+        const val VERSION = "v0.1.1"
         const val AUTHOR = "RandomByte"
 
         const val PERMISSION = "de.randombyte.servertours"
