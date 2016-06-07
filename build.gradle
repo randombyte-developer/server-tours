@@ -22,13 +22,14 @@ configurations {
     compile.extendsFrom shade
 }
 
-ext.apiVersion = '4.0.3'
+ext.spongeApiVersion = '4.0.3'
+ext.kotlinVersion = '1.0.2'
 
 dependencies {
-    shade "org.jetbrains.kotlin:kotlin-runtime:1.0.1"
-    shade "org.jetbrains.kotlin:kotlin-stdlib:1.0.1"
-    compile "org.spongepowered:spongeapi:$apiVersion"
-    kapt "org.spongepowered:spongeapi:$apiVersion"
+    shade "org.jetbrains.kotlin:kotlin-runtime:$kotlinVersion"
+    shade "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.spongepowered:spongeapi:$spongeApiVersion"
+    kapt "org.spongepowered:spongeapi:$spongeApiVersion"
 }
 
 //https://forgegradle.readthedocs.org/en/latest/user-guide/shading/
