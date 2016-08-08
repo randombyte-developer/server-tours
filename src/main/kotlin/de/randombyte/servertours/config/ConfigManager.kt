@@ -52,11 +52,5 @@ object ConfigManager {
         setTours(getTours() + (tour.uuid to newTour))
     }
 
-    fun <T> List<T>.swap(first: Int, second: Int): List<T> {
-        val take = take(first)
-        val get = get(second)
-        val get1 = get(first)
-        val drop = drop(second + 1)
-        return take + get + get1 + drop
-    }
+    fun <T> List<T>.swap(first: Int, second: Int) = take(first) + get(second) + get(first) + drop(second + 1)
 }
