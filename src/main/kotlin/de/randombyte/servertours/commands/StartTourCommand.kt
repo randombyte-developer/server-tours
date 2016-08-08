@@ -11,7 +11,7 @@ class StartTourCommand : PlayerCommandExecutor() {
     override fun executedByPlayer(player: Player, args: CommandContext): CommandResult {
         val tour = args.getTour()
         if (tour.waypoints.size == 0) throw "Specified Tour doesn't have any Waypoints!".toCommandException()
-        ServerTours.playerStartLocations[player.uniqueId] = player.location
+        ServerTours.playerStartLocations[player.uniqueId] = player.location to player.rotation
         player.sendMessage(Text.of(TextColors.GRAY, "Starting Tour '", tour.name, "'..."))
         player.executeCommand("serverTours teleport ${tour.uuid} 0")
         return CommandResult.success()

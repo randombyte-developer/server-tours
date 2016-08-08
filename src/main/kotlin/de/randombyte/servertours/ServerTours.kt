@@ -1,5 +1,6 @@
 package de.randombyte.servertours
 
+import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import de.randombyte.servertours.commands.*
 import de.randombyte.servertours.config.ConfigManager
@@ -30,7 +31,7 @@ class ServerTours @Inject constructor(val logger: Logger,
 
         const val PERMISSION = "de.randombyte.servertours"
 
-        val playerStartLocations = mutableMapOf<UUID, Location<World>>()
+        val playerStartLocations = mutableMapOf<UUID, Pair<Location<World>, Vector3d>>()
     }
 
     @Listener

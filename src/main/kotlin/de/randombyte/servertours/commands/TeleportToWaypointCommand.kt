@@ -33,8 +33,9 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         val nextWaypointExists = tour.waypoints.indices.contains(currentWaypointIndex + 1)
         return if (!nextWaypointExists && ServerTours.playerStartLocations.containsKey(player.uniqueId)) {
             getDeactivatableText(Text.of(" [END TOUR]"), true, TextActions.executeCallback {
-                val homeLocation = ServerTours.playerStartLocations.remove(player.uniqueId)
-                if (homeLocation != null) player.location = homeLocation
+                val homeLocationAndRotation = ServerTours.playerStartLocations.remove(player.uniqueId)
+                if (homeLocationAndRotation != null)
+                    player.setLocationAndRotation(homeLocationAndRotation.first, homeLocationAndRotation.second)
             })
         } else {
             getDeactivatableText(Text.of(" [NEXT WAYPOINT]"), nextWaypointExists,
