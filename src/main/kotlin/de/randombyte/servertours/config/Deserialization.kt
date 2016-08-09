@@ -15,7 +15,8 @@ object Deserialization {
     fun deserialize(node: ConfigurationNode): Tour =
             Tour(UUID.fromString(node.key.toString()),
                     deserializeText(node.getNode(ConfigManager.NAME_NODE).string),
-                    node.getNode(ConfigManager.WAYPOINTS_NODE).childrenList.map { deserializeWaypoint(it) })
+                    node.getNode(ConfigManager.WAYPOINTS_NODE).childrenList.map { deserializeWaypoint(it) },
+                    node.getNode(ConfigManager.COMPLETION_COMMAND_NODE).string)
 
     private fun deserializeWaypoint(node: ConfigurationNode): Waypoint =
             Waypoint(deserializeLocation(node.getNode(ConfigManager.LOCATION_NODE)),

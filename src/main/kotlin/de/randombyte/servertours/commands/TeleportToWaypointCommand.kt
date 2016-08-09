@@ -2,6 +2,7 @@ package de.randombyte.servertours.commands
 
 import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
+import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.entity.living.player.Player
@@ -34,8 +35,13 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         return if (!nextWaypointExists && ServerTours.playerStartLocations.containsKey(player.uniqueId)) {
             getDeactivatableText(Text.of(" [END TOUR]"), true, TextActions.executeCallback {
                 val homeLocationAndRotation = ServerTours.playerStartLocations.remove(player.uniqueId)
-                if (homeLocationAndRotation != null)
+                if (homeLocationAndRotation != null) {
                     player.setLocationAndRotation(homeLocationAndRotation.first, homeLocationAndRotation.second)
+                }
+                if (tour.completionCommand.isNotBlank()) {
+                    Sponge.getCommandManager()
+                            .process(Sponge.getServer().console, tour.completionCommand.replace("\$player", player.name))
+                }
             })
         } else {
             getDeactivatableText(Text.of(" [NEXT WAYPOINT]"), nextWaypointExists,

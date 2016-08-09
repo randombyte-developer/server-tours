@@ -14,6 +14,7 @@ object Serialization {
     fun serialize(tour: Tour, node: ConfigurationNode) {
         node.getNode(ConfigManager.NAME_NODE).value = serializeText(tour.name)
         node.getNode(ConfigManager.WAYPOINTS_NODE).value = tour.waypoints.map { serializeWaypoint(it, SimpleConfigurationNode.root()) }
+        node.getNode(ConfigManager.COMPLETION_COMMAND_NODE).value = tour.completionCommand
     }
 
     private fun serializeWaypoint(waypoint: Waypoint, node: ConfigurationNode): ConfigurationNode {
