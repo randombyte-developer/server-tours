@@ -19,17 +19,16 @@ abstract class BaseCommand : CommandExecutor {
     fun CommandSource.executeCommand(command: String) = Sponge.getCommandManager().process(this, command)
     fun String.toCommandException() = CommandException(Text.of(this))
 
-    fun CommandContext.getTour() = getOne<String>("tourUUID").asUUID().getTour()
+    fun CommandContext.getTour() = ConfigManager.getTour(getOne<String>("tourUUID").asUUID()).orElseThrow {
+        "Haven't found any Tour with given tourUUID!".toCommandException()
+    }
+
     fun CommandContext.getWaypointIndex() = getOne<Int>("waypointIndex").checkIfWaypointExists(getTour())
 
     fun Optional<String>.asUUID() = try {
-        UUID.fromString(this.orElseThrow { "tourUUID is missing!".toCommandException() })
-    } catch (illegalAraException: IllegalArgumentException) {
+        UUID.fromString(this.orElseThrow { "tourUUID is missing!".toCommandException() })!!
+    } catch (ex: IllegalArgumentException) {
         throw "Invalid UUID!".toCommandException()
-    }
-
-    fun UUID.getTour() = ConfigManager.getTour(this).orElseThrow {
-        "Haven't found any Tour with given tourUUID!".toCommandException()
     }
 
     fun Optional<Int>.checkIfWaypointExists(tour: Tour): Int {
