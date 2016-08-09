@@ -26,7 +26,7 @@ class ServerTours @Inject constructor(val logger: Logger,
     companion object {
         const val NAME = "ServerTours"
         const val ID = "de.randombyte.servertours"
-        const val VERSION = "v1.0"
+        const val VERSION = "v1.1"
         const val AUTHOR = "RandomByte"
 
         const val EDITING_PERMISSION = "servertours.edit"
