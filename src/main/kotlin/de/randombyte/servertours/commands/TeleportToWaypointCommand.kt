@@ -11,7 +11,7 @@ import org.spongepowered.api.text.action.TextActions
 class TeleportToWaypointCommand : PlayerCommandExecutor() {
     override fun executedByPlayer(player: Player, args: CommandContext): CommandResult {
         val tour = args.getTour()
-        if (!player.hasPermission("${ServerTours.PERMISSION}.${tour.uuid}"))
+        if (!player.hasPermission("${ServerTours.VIEW_PERMISSION}.${tour.uuid}"))
             throw "You don't have the permission to teleport to that Waypoint!".toCommandException()
         val waypointIndex = args.getWaypointIndex()
         val waypoint = tour.waypoints[waypointIndex]

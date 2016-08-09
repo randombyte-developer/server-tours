@@ -26,10 +26,11 @@ class ServerTours @Inject constructor(val logger: Logger,
     companion object {
         const val NAME = "ServerTours"
         const val ID = "de.randombyte.servertours"
-        const val VERSION = "v0.1.1"
+        const val VERSION = "v1.1.1"
         const val AUTHOR = "RandomByte"
 
-        const val PERMISSION = "de.randombyte.servertours"
+        const val EDITING_PERMISSION = "servertours.edit"
+        const val VIEW_PERMISSION = "servertours.view"
 
         val playerStartLocations = mutableMapOf<UUID, Pair<Location<World>, Vector3d>>()
     }
@@ -42,21 +43,20 @@ class ServerTours @Inject constructor(val logger: Logger,
         fun String.toIntArg() = GenericArguments.integer(Text.of(this))
 
         Sponge.getCommandManager().register(this, CommandSpec.builder()
-                .permission(PERMISSION)
                 .executor(ListToursCommand())
                 .description(Text.of("This is the only important command because all other commands are called by the text GUI."))
                 //Tours
                 .child(CommandSpec.builder()
-                        .permission(PERMISSION)
+                        .permission(EDITING_PERMISSION)
                         .executor(CreateTourCommand())
                         .build(), "create", "add", "new")
                 .child(CommandSpec.builder()
-                        .permission(PERMISSION)
+                        .permission(EDITING_PERMISSION)
                         .arguments("tourUUID".toStringArg())
                         .executor(ListTourWaypointsCommand())
                         .build(), "list", "edit")
                 .child(CommandSpec.builder()
-                        .permission(PERMISSION)
+                        .permission(EDITING_PERMISSION)
                         .arguments("tourUUID".toStringArg())
                         .executor(DeleteTourCommand())
                         .build(), "delete", "remove")
@@ -66,12 +66,12 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .build(), "start")
                 //Waypoints
                 .child(CommandSpec.builder()
-                        .permission(PERMISSION)
+                        .permission(EDITING_PERMISSION)
                         .arguments("tourUUID".toStringArg())
                         .executor(CreateWaypointCommand())
                         .build(), "newWaypoint")
                 .child(CommandSpec.builder()
-                        .permission(PERMISSION)
+                        .permission(EDITING_PERMISSION)
                         .arguments(GenericArguments.seq("tourUUID".toStringArg(), "waypointIndex".toIntArg()))
                         .executor(DeleteWaypointCommand())
                         .build(), "deleteWaypoint")
