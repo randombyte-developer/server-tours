@@ -1,6 +1,5 @@
 package de.randombyte.servertours
 
-import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import de.randombyte.servertours.commands.*
 import de.randombyte.servertours.config.ConfigManager
@@ -15,8 +14,6 @@ import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.game.state.GameInitializationEvent
 import org.spongepowered.api.plugin.Plugin
 import org.spongepowered.api.text.Text
-import org.spongepowered.api.world.Location
-import org.spongepowered.api.world.World
 import java.util.*
 
 @Plugin(id = ServerTours.ID, name = ServerTours.NAME, version = ServerTours.VERSION, authors = arrayOf(ServerTours.AUTHOR))
@@ -32,7 +29,7 @@ class ServerTours @Inject constructor(val logger: Logger,
         const val EDITING_PERMISSION = "servertours.edit"
         const val VIEW_PERMISSION = "servertours.view"
 
-        val playerStartLocations = mutableMapOf<UUID, Pair<Location<World>, Vector3d>>()
+        val playerStartLocations = mutableMapOf<UUID, LocationAndRotation>()
     }
 
     @Listener
