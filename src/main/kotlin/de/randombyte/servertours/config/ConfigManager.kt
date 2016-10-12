@@ -12,7 +12,6 @@ object ConfigManager {
     const val NAME_NODE = "name"
     const val WAYPOINTS_NODE = "waypoints"
     const val COMPLETION_COMMAND_NODE = "completionCommand"
-    const val END_POINT_NODE = "end-point"
     const val LOCATION_NODE = "location"
     const val WORLD_UUID_NODE = "worldUUID"
     const val POSITION_NODE = "position"

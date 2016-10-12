@@ -1,7 +1,6 @@
 package de.randombyte.servertours.config
 
 import com.flowpowered.math.vector.Vector3i
-import de.randombyte.servertours.LocationAndRotation
 import de.randombyte.servertours.Tour
 import de.randombyte.servertours.Waypoint
 import ninja.leaping.configurate.ConfigurationNode
@@ -16,7 +15,6 @@ object Serialization {
         node.getNode(ConfigManager.NAME_NODE).value = serializeText(tour.name)
         node.getNode(ConfigManager.WAYPOINTS_NODE).value = tour.waypoints.map { serializeWaypoint(it, SimpleConfigurationNode.root()) }
         node.getNode(ConfigManager.COMPLETION_COMMAND_NODE).value = tour.completionCommand
-        if (tour.endPoint != null) serializeLocationAndRotation(tour.endPoint, node.getNode(ConfigManager.END_POINT_NODE))
     }
 
     private fun serializeWaypoint(waypoint: Waypoint, node: ConfigurationNode): ConfigurationNode {
@@ -25,11 +23,6 @@ object Serialization {
         node.getNode(ConfigManager.INFO_TEXT_NODE).value = serializeText(waypoint.infoText)
         node.getNode(ConfigManager.INFO_TEXT_PLACEMENT_NODE).value = waypoint.infoTextPlacement
         return node
-    }
-
-    private fun serializeLocationAndRotation(locationAndRotation: LocationAndRotation, node: ConfigurationNode) {
-        node.getNode(ConfigManager.LOCATION_NODE).value = serializeLocation(locationAndRotation.location, node.getNode(ConfigManager.LOCATION_NODE))
-        node.getNode(ConfigManager.HEAD_ROTATION_NODE).value = serializeVector3i(locationAndRotation.headRotation.toInt())
     }
 
     private fun serializeLocation(location: Location<World>, node: ConfigurationNode) {

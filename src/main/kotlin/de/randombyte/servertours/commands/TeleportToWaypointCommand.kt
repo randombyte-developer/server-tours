@@ -33,15 +33,12 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
 
     private fun getNextWaypointButton(tour: Tour, currentWaypointIndex: Int, player: Player): Text {
         val nextWaypointExists = tour.waypoints.indices.contains(currentWaypointIndex + 1)
-        return if (!nextWaypointExists) {
+        return if (!nextWaypointExists && ServerTours.playerStartLocations.containsKey(player.uniqueId)) {
             getDeactivatableText(Text.of(" [END TOUR]"), true, TextActions.executeCallback {
                 player.clearTitle() // The info-texts might be sent as a title; clear it
                 val homeLocationAndRotation = ServerTours.playerStartLocations.remove(player.uniqueId)
                 if (homeLocationAndRotation != null) {
-                    player.setLocationAndRotation(homeLocationAndRotation.location, homeLocationAndRotation.headRotation)
-                }
-                if (tour.endPoint != null) {
-                    player.setLocationAndRotation(tour.endPoint.location, tour.endPoint.headRotation)
+                    player.setLocationAndRotation(homeLocationAndRotation.first, homeLocationAndRotation.second)
                 }
                 if (tour.completionCommand.isNotBlank()) {
                     Sponge.getServer().console.runCommand(tour.completionCommand.replace("\$player", player.name))
@@ -56,5 +53,5 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         }
     }
 
-    private fun CommandSource.runCommand(command: String) = Sponge.getCommandManager().process(this, command)
+    fun CommandSource.runCommand(command: String) = Sponge.getCommandManager().process(this, command)
 }
