@@ -21,7 +21,8 @@ object Deserialization {
     private fun deserializeWaypoint(node: ConfigurationNode): Waypoint =
             Waypoint(deserializeLocation(node.getNode(ConfigManager.LOCATION_NODE)),
                     deserializeVector3i(node.getNode(ConfigManager.HEAD_ROTATION_NODE)).toDouble(),
-                    deserializeText(node.getNode(ConfigManager.INFO_TEXT_NODE).string))
+                    deserializeText(node.getNode(ConfigManager.INFO_TEXT_NODE).string),
+                    node.getNode(ConfigManager.INFO_TEXT_PLACEMENT_NODE).string)
 
     private fun deserializeLocation(node: ConfigurationNode): Location<World> {
         val worldUUID = node.getNode(ConfigManager.WORLD_UUID_NODE).string

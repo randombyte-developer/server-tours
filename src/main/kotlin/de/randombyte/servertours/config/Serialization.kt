@@ -21,6 +21,7 @@ object Serialization {
         serializeLocation(waypoint.location, node.getNode(ConfigManager.LOCATION_NODE))
         node.getNode(ConfigManager.HEAD_ROTATION_NODE).value = serializeVector3i(waypoint.headRotation.toInt())
         node.getNode(ConfigManager.INFO_TEXT_NODE).value = serializeText(waypoint.infoText)
+        node.getNode(ConfigManager.INFO_TEXT_PLACEMENT_NODE).value = waypoint.infoTextPlacement
         return node
     }
 
