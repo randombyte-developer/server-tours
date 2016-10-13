@@ -4,7 +4,6 @@ import de.randombyte.servertours.ServerTours
 import de.randombyte.servertours.Tour
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandResult
-import org.spongepowered.api.command.CommandSource
 import org.spongepowered.api.command.args.CommandContext
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.text.Text
@@ -18,6 +17,9 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         val waypointIndex = args.getWaypointIndex()
         val waypoint = tour.waypoints[waypointIndex]
         player.setLocationAndRotationSafely(waypoint.location, waypoint.headRotation)
+        if (waypoint.freezePlayer) {
+            ServerTours.frozenPlayers += player.uniqueId to waypoint.location
+        }
         tour.waypoints[waypointIndex].sendInfoText(player)
         player.sendMessage(getNavigationButtons(tour, waypointIndex, player))
         return CommandResult.success()
@@ -35,23 +37,27 @@ class TeleportToWaypointCommand : PlayerCommandExecutor() {
         val nextWaypointExists = tour.waypoints.indices.contains(currentWaypointIndex + 1)
         return if (!nextWaypointExists && ServerTours.playerStartLocations.containsKey(player.uniqueId)) {
             getDeactivatableText(Text.of(" [END TOUR]"), true, TextActions.executeCallback {
-                player.clearTitle() // The info-texts might be sent as a title; clear it
+                leaveWaypoint(player)
                 val homeLocationAndRotation = ServerTours.playerStartLocations.remove(player.uniqueId)
                 if (homeLocationAndRotation != null) {
                     player.setLocationAndRotation(homeLocationAndRotation.first, homeLocationAndRotation.second)
                 }
                 if (tour.completionCommand.isNotBlank()) {
-                    Sponge.getServer().console.runCommand(tour.completionCommand.replace("\$player", player.name))
+                    Sponge.getServer().console.executeCommand(tour.completionCommand.replace("\$player", player.name))
                 }
             })
         } else {
             getDeactivatableText(Text.of(" [NEXT WAYPOINT]"), nextWaypointExists,
                     TextActions.executeCallback {
-                        player.clearTitle() // The info-texts might be sent as a title; clear it
-                        player.runCommand("serverTours teleport ${tour.uuid} ${currentWaypointIndex + 1}")
+                        leaveWaypoint(player)
+                        player.executeCommand("serverTours teleport ${tour.uuid} ${currentWaypointIndex + 1}")
                     })
         }
     }
 
-    fun CommandSource.runCommand(command: String) = Sponge.getCommandManager().process(this, command)
+    private fun leaveWaypoint(player: Player) {
+        // filterNot to remove entry
+        ServerTours.frozenPlayers = ServerTours.frozenPlayers.filterNot { it.key == player.uniqueId }
+        player.clearTitle() // The info-texts might be sent as a title; clear it
+    }
 }

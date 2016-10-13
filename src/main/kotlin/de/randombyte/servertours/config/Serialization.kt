@@ -22,6 +22,7 @@ object Serialization {
         node.getNode(ConfigManager.HEAD_ROTATION_NODE).value = serializeVector3i(waypoint.headRotation.toInt())
         node.getNode(ConfigManager.INFO_TEXT_NODE).value = serializeText(waypoint.infoText)
         node.getNode(ConfigManager.INFO_TEXT_PLACEMENT_NODE).value = waypoint.infoTextPlacement
+        node.getNode(ConfigManager.FREEZE_PLAYER_NODE).value = waypoint.freezePlayer
         return node
     }
 

@@ -14,6 +14,7 @@ import org.spongepowered.api.config.DefaultConfig
 import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.game.state.GameInitializationEvent
 import org.spongepowered.api.plugin.Plugin
+import org.spongepowered.api.scheduler.Task
 import org.spongepowered.api.text.Text
 import org.spongepowered.api.world.Location
 import org.spongepowered.api.world.World
@@ -25,14 +26,15 @@ class ServerTours @Inject constructor(val logger: Logger,
 
     companion object {
         const val NAME = "ServerTours"
-        const val ID = "de.randombyte.servertours"
-        const val VERSION = "v1.1"
+        const val ID = "servertours"
+        const val VERSION = "v1.2"
         const val AUTHOR = "RandomByte"
 
         const val EDITING_PERMISSION = "servertours.edit"
         const val VIEW_PERMISSION = "servertours.view"
 
         val playerStartLocations = mutableMapOf<UUID, Pair<Location<World>, Vector3d>>()
+        var frozenPlayers = mapOf<UUID, Location<World>>()
     }
 
     @Listener
@@ -80,6 +82,13 @@ class ServerTours @Inject constructor(val logger: Logger,
                         .executor(TeleportToWaypointCommand())
                         .build(), "teleport")
                 .build(), "serverTours")
+
+        Task.builder()
+                .intervalTicks(1)
+                .execute { ->
+                    frozenPlayers = frozenPlayers.filter { Sponge.getServer().getPlayer(it.key).isPresent }
+                    frozenPlayers.forEach { Sponge.getServer().getPlayer(it.key).get().location = it.value }
+                }.submit(this)
 
         logger.info("$NAME loaded: $VERSION")
     }

@@ -18,6 +18,7 @@ object ConfigManager {
     const val HEAD_ROTATION_NODE = "rotation"
     const val INFO_TEXT_NODE = "infotext"
     const val INFO_TEXT_PLACEMENT_NODE = "infotext-placement"
+    const val FREEZE_PLAYER_NODE = "freeze-player"
 
     //Initialized in init phase of plugin
     lateinit var configLoader: ConfigurationLoader<out ConfigurationNode>
