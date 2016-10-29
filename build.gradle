@@ -4,7 +4,7 @@ plugins {
 }
 
 group "de.randombyte"
-version "v1.2"
+version "v1.2.1"
 
 repositories {
     jcenter()
@@ -21,7 +21,7 @@ configurations {
     compile.extendsFrom shade
 }
 
-ext.spongeApiVersion = "5.0.0-SNAPSHOT"
+ext.spongeApiVersion = "5.0.0"
 ext.kotlinVersion = "1.0.4"
 
 dependencies {
